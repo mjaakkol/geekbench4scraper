@@ -7,7 +7,6 @@ import logging
 
 import pandas as pd
 
-import scrapy
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
@@ -55,7 +54,7 @@ if __name__ == '__main__':
                         )
 
     parser.add_argument('-j', '--json',
-                        help='Perform only json converion without any scraping. '
+                        help='Perform only json conversion without any scraping. '
                         )
 
     args = parser.parse_args()
@@ -93,13 +92,15 @@ if __name__ == '__main__':
 
         json_file = args.json
 
-    hfs5_file = convert_data(json_file, hfs_file_prefix)
+    try:
+        hfs5_file = convert_data(json_file, hfs_file_prefix)
 
-    if hfs5_file:
-        shutil.move(hfs5_file, args.path)
-    else:
-        print("Hfs5 file creation failed! Please, use JSON file")
-
+        if hfs5_file:
+            shutil.move(hfs5_file, args.path)
+        else:
+            print("Hfs5 file creation failed! Please, use JSON file")
+    except:
+        print("Converting data raised exception. Most likely JSON is broken. Check manually")
 
 
 
